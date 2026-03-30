@@ -1,4 +1,4 @@
-# Deep Dive: The Mechanics of Read Replication
+  # Deep Dive: The Mechanics of Read Replication
 
 Setting up Master-Slave replication might seem like magic, but under the hood, it's a precisely orchestrated log-shipping mechanism. When you scale your database horizontally for reads, you introduce fundamentally new classes of distributed systems problems into your architecture. 
 
