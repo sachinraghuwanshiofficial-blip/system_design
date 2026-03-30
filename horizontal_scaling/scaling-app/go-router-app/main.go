@@ -95,17 +95,17 @@ func main() {
 	// --- Simulating Application Traffic ---
 	fmt.Println("\n--- Initiating Phase 3 Traffic Simulation ---")
 
-	userSachinID := 201 // Odd number -> 201 % 2 = 1 (Shard-B)
-	userIshaID := 202   // Even number -> 202 % 2 = 0 (Shard-A)
+	userSachinID := 301 // Odd number -> 301 % 2 = 1 (Shard-B)
+	userIshaID := 302   // Even number -> 302 % 2 = 0 (Shard-A)
 
-	// User 201 writes a record
+	// User 301 writes a record
 	targetShard1 := system.GetShardForUser(userSachinID)
 	_, err = targetShard1.Cluster.WriteQuery("INSERT INTO social_app.users (id, username, email) VALUES (?, ?, ?)", userSachinID, "sachin_sharded", "sachin@shard.com")
 	if err != nil {
 		fmt.Printf("   -> ❌ DB Error: %v\n", err)
 	}
 
-	// User 202 writes a record
+	// User 302 writes a record
 	targetShard2 := system.GetShardForUser(userIshaID)
 	_, err = targetShard2.Cluster.WriteQuery("INSERT INTO social_app.users (id, username, email) VALUES (?, ?, ?)", userIshaID, "isha_sharded", "isha@shard.com")
 	if err != nil {
@@ -115,7 +115,7 @@ func main() {
 	// Wait 100 milliseconds for Master Binlog to stream to Replicas
 	time.Sleep(100 * time.Millisecond)
 
-	// User 201 reads their own profile
+	// User 301 reads their own profile
 	targetShard1Again := system.GetShardForUser(userSachinID)
 	rows, err := targetShard1Again.Cluster.ReadQuery("SELECT username FROM social_app.users WHERE id = ?", userSachinID)
 	if err == nil {
@@ -131,5 +131,3 @@ func main() {
 		fmt.Printf("   -> ❌ Read Error: %v\n", err)
 	}
 }
-
-
